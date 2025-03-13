@@ -1,84 +1,115 @@
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $customer = $_POST['customer'];
-    $produk = $_POST['produk'];
-    $jumlah = $_POST['jumlah'];
-    
-    // Daftar harga produk
-    $harga_produk = [
-        "TV" => 4200000,
-        "Kulkas" => 3100000,
-        "Mesin Cuci" => 3800000
-    ];
-    
-    // Hitung total harga belanja
-    $total_harga = isset($harga_produk[$produk]) ? $harga_produk[$produk] * $jumlah : 0;
+<!DOCTYPE html>
+<html lang="id">
 
-    // Data nilai siswa
-    $nilai_uts = isset($_POST['nilai_uts']) ? $_POST['nilai_uts'] : 0;
-    $nilai_uas = isset($_POST['nilai_uas']) ? $_POST['nilai_uas'] : 0;
-    $nilai_tugas = isset($_POST['nilai_tugas']) ? $_POST['nilai_tugas'] : 0;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Nilai Mahasiswa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #8360c3, #2ebf91);
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .card-header {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px 15px 0 0;
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: none;
+        }
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .btn-primary {
+            background: #2ebf91;
+            border: none;
+        }
+        .hasil-nilai {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
 
-    // Hitung nilai akhir dengan bobot
-    $nilai_akhir = ($nilai_uts * 0.3) + ($nilai_uas * 0.35) + ($nilai_tugas * 0.35);
-
-    // Menentukan status kelulusan
-    $status = ($nilai_akhir > 55) ? "Lulus" : "Tidak Lulus";
-
-    // Menentukan grade berdasarkan nilai akhir
-    if ($nilai_akhir >= 85 && $nilai_akhir <= 100) {
-        $grade = "A";
-    } elseif ($nilai_akhir >= 70 && $nilai_akhir < 85) {
-        $grade = "B";
-    } elseif ($nilai_akhir >= 56 && $nilai_akhir < 70) {
-        $grade = "C";
-    } elseif ($nilai_akhir >= 36 && $nilai_akhir < 56) {
-        $grade = "D";
-    } elseif ($nilai_akhir >= 0 && $nilai_akhir < 36) {
-        $grade = "E";
-    } else {
-        $grade = "I"; // Invalid
-    }
-
-    // Menentukan predikat menggunakan switch case
-    switch ($grade) {
-        case "A":
-            $predikat = "Sangat Memuaskan";
-            break;
-        case "B":
-            $predikat = "Memuaskan";
-            break;
-        case "C":
-            $predikat = "Cukup";
-            break;
-        case "D":
-            $predikat = "Kurang";
-            break;
-        case "E":
-            $predikat = "Sangat Kurang";
-            break;
-        default:
-            $predikat = "Tidak Ada";
-            break;
-    }
-?>
-    <div class="container mt-3">
-        <div class="card">
-            <div class="card-header bg-success text-white">Hasil Belanja & Nilai</div>
-            <div class="card-body">
-                <p><strong>Nama Customer:</strong> <?= htmlspecialchars($customer) ?></p>
-                <p><strong>Produk Pilihan:</strong> <?= htmlspecialchars($produk) ?></p>
-                <p><strong>Jumlah Beli:</strong> <?= htmlspecialchars($jumlah) ?></p>
-                <p><strong>Total Belanja:</strong> Rp. <?= number_format($total_harga, 0, ',', '.') ?></p>
-                <hr>
-                <p><strong>Nilai UTS:</strong> <?= $nilai_uts ?></p>
-                <p><strong>Nilai UAS:</strong> <?= $nilai_uas ?></p>
-                <p><strong>Nilai Tugas/Praktikum:</strong> <?= $nilai_tugas ?></p>
-                <p><strong>Nilai Akhir:</strong> <?= number_format($nilai_akhir, 2) ?></p>
-                <p><strong>Status:</strong> <?= $status ?></p>
-                <p><strong>Grade:</strong> <?= $grade ?></p>
-                <p><strong>Predikat:</strong> <?= $predikat ?></p>
+<body>
+    <div class="container">
+        <div class="card p-4">
+            <div class="card-header text-center text-white">
+                <h3>Form Penilaian Mahasiswa</h3>
             </div>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label class="form-label">Nama Mahasiswa</label>
+                    <input type="text" name="nama" class="form-control" placeholder="Masukkan nama" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mata Kuliah</label>
+                    <select name="matkul" class="form-control" required>
+                        <option value="Pemrograman Web">Pemrograman Web</option>
+                        <option value="Basis Data">Basis Data</option>
+                        <option value="Jaringan Komputer">Jaringan Komputer</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nilai UTS</label>
+                    <input type="number" name="nilai_uts" class="form-control" min="0" max="100" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nilai UAS</label>
+                    <input type="number" name="nilai_uas" class="form-control" min="0" max="100" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nilai Tugas</label>
+                    <input type="number" name="nilai_tugas" class="form-control" min="0" max="100" required>
+                </div>
+                <button type="submit" name="proses" class="btn btn-primary w-100">Hitung</button>
+            </form>
+            
+            <?php
+            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['proses'])) {
+                $nama_siswa = $_POST['nama'];
+                $mata_kuliah = $_POST['matkul'];
+                $nilai_uts = $_POST['nilai_uts'];
+                $nilai_uas = $_POST['nilai_uas'];
+                $nilai_tugas = $_POST['nilai_tugas'];
+
+                $nilai_akhir = ($nilai_uts * 0.3) + ($nilai_uas * 0.35) + ($nilai_tugas * 0.35);
+                $status = ($nilai_akhir > 55) ? "Lulus" : "Tidak Lulus";
+                $grade = ($nilai_akhir >= 85) ? 'A' : (($nilai_akhir >= 70) ? 'B' : (($nilai_akhir >= 56) ? 'C' : (($nilai_akhir >= 36) ? 'D' : 'E')));
+                $predikat_list = ['A' => 'Sangat Memuaskan', 'B' => 'Memuaskan', 'C' => 'Cukup', 'D' => 'Kurang', 'E' => 'Sangat Kurang'];
+                $predikat = $predikat_list[$grade];
+            ?>
+                <div class="hasil-nilai text-white mt-4">
+                    <h5 class="text-center">Hasil Penilaian</h5>
+                    <p><strong>Nama:</strong> <?= $nama_siswa; ?></p>
+                    <p><strong>Mata Kuliah:</strong> <?= $mata_kuliah; ?></p>
+                    <p><strong>Nilai UTS:</strong> <?= $nilai_uts; ?></p>
+                    <p><strong>Nilai UAS:</strong> <?= $nilai_uas; ?></p>
+                    <p><strong>Nilai Tugas:</strong> <?= $nilai_tugas; ?></p>
+                    <p><strong>Nilai Akhir:</strong> <?= number_format($nilai_akhir, 2); ?></p>
+                    <p><strong>Status:</strong> <span class="badge bg-<?= ($status == "Lulus") ? 'success' : 'danger'; ?>"> <?= $status; ?> </span></p>
+                    <p><strong>Grade:</strong> <span class="badge bg-primary"> <?= $grade; ?> </span></p>
+                    <p><strong>Predikat:</strong> <?= $predikat; ?></p>
+                </div>
+            <?php } ?>
         </div>
     </div>
-<?php } ?>
+</body>
+
+</html>
